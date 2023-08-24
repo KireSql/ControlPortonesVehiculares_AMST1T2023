@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EFEEEE"
-    tools:context=".Soporte">
+    tools:context=".ListaUsuarios">
 
     <TextView
-        android:id="@+id/soporte"
+        android:id="@+id/usuarios"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_marginLeft="100dp"
@@ -16,7 +16,7 @@
         android:background="@drawable/edittext_rounded_background_2"
         android:fontFamily="sans-serif-light"
         android:gravity="right|center"
-        android:text="Soporte Técnico   "
+        android:text="Lista de Usuarios "
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         android:textSize="34sp"
@@ -26,91 +26,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/soporte2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="¿En qué podemos ayudarte? Por favor, cuéntanos cómo podemos brindarte asistencia o resolver tus dudas."
-        android:textColor="#000000"
-        android:textSize="20sp"
-        android:textStyle="normal"
-        android:justificationMode="inter_word"
-        android:textAlignment="viewStart"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/soporte" />
-
-    <EditText
-        android:id="@+id/mensaje"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Escribe tu comentario"
-        android:layout_marginLeft="20dp"
-        android:textSize="20sp"
-        android:layout_marginRight="20dp"
-        android:layout_margin="20dp"
-        android:singleLine="true"
-        android:background="@drawable/edittext_rounded_background"
-        android:textColor="@android:color/black"
-        android:padding="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/soporte2" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        tools:context=".Soporte"
-        app:layout_constraintTop_toBottomOf="@id/mensaje">
-
-        <Button
-            android:id="@+id/boton_enviar"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="20sp"
-            android:backgroundTint="#2563AB"
-            android:textColor="#FFFFFF"
-            android:onClick="enviar"
-            android:text="Enviar"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.6" />
-
-        <Button
-            android:id="@+id/boton_cancelar"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="20sp"
-            android:backgroundTint="#2563AB"
-            android:textColor="#FFFFFF"
-            android:onClick="cancelar"
-            android:text="Cancelar"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.6" />
-
-    </LinearLayout>
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        tools:context=".Soporte"
+        tools:context=".ListaUsuarios"
         android:background="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -124,6 +45,21 @@
             android:adjustViewBounds="true"
             android:layout_margin="15dp"
             android:onClick="inicio"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.6" />
+
+        <ImageButton
+            android:id="@+id/boton_usuarios"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/usuarios"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_margin="15dp"
+            android:onClick="usuarios"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -145,15 +81,15 @@
             app:layout_constraintVertical_bias="0.6" />
 
         <ImageButton
-            android:id="@+id/boton_soporte"
+            android:id="@+id/boton_mensajes"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/soporte"
+            android:src="@drawable/mensajes"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:layout_margin="15dp"
-            android:onClick="soporte"
+            android:onClick="mensajes"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

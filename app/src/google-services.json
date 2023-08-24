@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "816547044550",
+    "firebase_url": "https://gateguard-e24d3-default-rtdb.firebaseio.com",
+    "project_id": "gateguard-e24d3",
+    "storage_bucket": "gateguard-e24d3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:816547044550:android:d1dd085e6f4b2d9ff88bc7",
+        "android_client_info": {
+          "package_name": "com.example.gateguard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "816547044550-bhf83uft02d9vvok0g524jooiuhm1r9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzIB_7jqdBnsygZ1oqD33YvLm1wI0EB-w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "816547044550-bhf83uft02d9vvok0g524jooiuhm1r9s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

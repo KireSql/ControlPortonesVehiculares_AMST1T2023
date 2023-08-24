@@ -58,6 +58,14 @@ public class InicioSesion extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Verifica si el usuario ya ha iniciado sesión previamente
+        if (isLoggedIn()) {
+            // Redirige directamente a la pantalla principal
+            goToMainActivity();
+            return;
+        }
+
         setContentView(R.layout.activity_inicio_sesion);
 
         emailEditText = findViewById(R.id.email);
@@ -67,6 +75,8 @@ public class InicioSesion extends AppCompatActivity {
         olvidarPasswordTextView = findViewById(R.id.olvidarPassword);
 
         mAuth = FirebaseAuth.getInstance();
+
+
 
         iniciarSesionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,7 +121,7 @@ public class InicioSesion extends AppCompatActivity {
     }
 
     private void validarCamposInicioSesion() {
-        String email = emailEditText.getText().toString().trim();
+        String email = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
         if (TextUtils.isEmpty(email) && TextUtils.isEmpty(password)) {
@@ -123,7 +133,14 @@ public class InicioSesion extends AppCompatActivity {
         } else {
             // Verificar la conexión a Internet antes de iniciar sesión
             if (isNetworkAvailable()) {
-                iniciarSesion();
+                // Verificar si el correo es "maria.fern.14@gmail.com"
+                if (email.equals("maria.fern.14@gmail.com")) {
+                    // Redirigir a la vista EditarCiudadelas
+                    Intent intent = new Intent(InicioSesion.this, EditarCiudadelas.class);
+                    startActivity(intent);
+                } else {
+                    iniciarSesion();
+                }
             } else {
                 Toast.makeText(getApplicationContext(), "No hay conexión a internet", Toast.LENGTH_SHORT).show();
             }
@@ -136,46 +153,61 @@ public class InicioSesion extends AppCompatActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
     private void iniciarSesion() {
-        String email = emailEditText.getText().toString().trim();
-        String password = passwordEditText.getText().toString();
+        final String email = emailEditText.getText().toString();
+        final String password = passwordEditText.getText().toString();
 
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        // Verificar si el usuario existe en Firebase
+        mAuth.fetchSignInMethodsForEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            if (user != null) {
-                                boolean isFirstTime = isFirstTimeUser(); // Verificar si es la primera vez del usuario
-                                if (isFirstTime) {
-                                    // Es la primera vez que inicia sesión, redirigir a la pestaña "InicioSesionGoogle"
-                                    Intent intent = new Intent(InicioSesion.this, AutenticacionCuenta.class);
-                                    startActivity(intent);
-                                } else {
-                                    if (!password.equals("123456")) {
-                                        Intent intent = new Intent(InicioSesion.this, Ciudadelas.class);
-                                        startActivity(intent);
-                                    } else {
-                                        // La contraseña ingresada es "123456", mostrar un mensaje de error o realizar otra acción
-                                        Toast.makeText(getApplicationContext(), "Estimado usuario, cambie la contraseña", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(InicioSesion.this, AutenticacionCuenta.class);
-                                        startActivity(intent);
-                                    }
-                                }
-                            } else {
-                                // El inicio de sesión fue exitoso, pero el usuario no está registrado en Firebase
-                                Toast.makeText(getApplicationContext(), "El usuario no está registrado", Toast.LENGTH_SHORT).show();
-                                // Aquí puedes mostrar un mensaje de error adicional o realizar otra acción
-                            }
-                        } else {
-                            // El inicio de sesión falló, muestra un mensaje de error
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                // La contraseña es incorrecta
+                            SignInMethodQueryResult result = task.getResult();
+                            if (result != null && result.getSignInMethods() != null && result.getSignInMethods().isEmpty()) {
+                                // El usuario no está registrado en Firebase
                                 Toast.makeText(getApplicationContext(), "Por favor revise que sus credenciales sean correctas", Toast.LENGTH_SHORT).show();
                             } else {
-                                // Otro tipo de error en el inicio de sesión
-                                Toast.makeText(getApplicationContext(), "Error en el inicio de sesión", Toast.LENGTH_SHORT).show();
+                                // El usuario está registrado, intentar iniciar sesión
+                                mAuth.signInWithEmailAndPassword(email, password)
+                                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                                if (task.isSuccessful()) {
+                                                    FirebaseUser user = mAuth.getCurrentUser();
+                                                    if (user != null) {
+                                                        boolean isFirstTime = isFirstTimeUser(); // Verificar si es la primera vez del usuario
+                                                        if (isFirstTime) {
+                                                            // Es la primera vez que inicia sesión, redirigir a la pestaña "InicioSesionGoogle"
+                                                            Intent intent = new Intent(InicioSesion.this, AutenticacionCuenta.class);
+                                                            startActivity(intent);
+                                                        } else {
+                                                            if (!password.equals("123456")) {
+                                                                Intent intent = new Intent(InicioSesion.this, Ciudadelas.class);
+                                                                startActivity(intent);
+                                                            } else {
+                                                                // La contraseña ingresada es "123456", mostrar un mensaje de error o realizar otra acción
+                                                                Toast.makeText(getApplicationContext(), "Estimado usuario, cambie la contraseña", Toast.LENGTH_SHORT).show();
+                                                                Intent intent = new Intent(InicioSesion.this, AutenticacionCuenta.class);
+                                                                startActivity(intent);
+                                                            }
+                                                        }
+                                                    }
+                                                } else {
+                                                    // El inicio de sesión falló, muestra un mensaje de error
+                                                    if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                                        // La contraseña es incorrecta
+                                                        Toast.makeText(getApplicationContext(), "Por favor revise que sus credenciales sean correctas", Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        // Otro tipo de error en el inicio de sesión
+                                                        Toast.makeText(getApplicationContext(), "Error en el inicio de sesión", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            }
+                                        });
                             }
+                        } else {
+                            // Error al verificar la existencia del usuario
+                            Toast.makeText(getApplicationContext(), "Error en el inicio de sesión", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -200,6 +232,7 @@ public class InicioSesion extends AppCompatActivity {
                     GoogleSignInAccount account = task.getResult(ApiException.class);
                     if (account != null){
                         String email = account.getEmail();
+                        Log.d("TAG", "Correo electrónico de GoogleSignInAccount: " + email);  // Declaración de registro agregada
                         checkIfEmailExists(email, account);
                     }
                 } catch (ApiException e) {
@@ -263,6 +296,7 @@ public class InicioSesion extends AppCompatActivity {
             info_user.put("user_photo", String.valueOf(user.getPhotoUrl()));
             info_user.put("user_id", user.getUid());
             info_user.put("user_phone", user.getPhoneNumber());
+            saveLoggedInStatus(true);
 
             if (user.getProviderData().size() > 2) {
                 Intent intent = new Intent(this, Ciudadelas.class);
@@ -288,6 +322,7 @@ public class InicioSesion extends AppCompatActivity {
     private void cerrarSesion() {
         mGoogleSignInClient.signOut().addOnCompleteListener(this,
                 task -> updateUI(null));
+        saveLoggedInStatus(false);
     }
 
     private boolean isFirstTimeUser() {
@@ -300,5 +335,23 @@ public class InicioSesion extends AppCompatActivity {
             editor.apply();
         }
         return isFirstTime;
+    }
+
+    private boolean isLoggedIn() {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        return sharedPreferences.getBoolean("isLoggedIn", false);
+    }
+
+    private void saveLoggedInStatus(boolean isLoggedIn) {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isLoggedIn", isLoggedIn);
+        editor.apply();
+    }
+
+    private void goToMainActivity() {
+        Intent intent = new Intent(this, Ciudadelas.class);
+        startActivity(intent);
+        finish(); // Finaliza la actividad actual para evitar que el usuario vuelva a la pantalla de inicio de sesión
     }
 }

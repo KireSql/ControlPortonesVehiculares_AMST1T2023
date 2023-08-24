@@ -1,3 +1,5 @@
+//VISTAS ADMINISTRADOR
+
 package com.example.gateguard;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,21 +17,24 @@ import android.widget.ImageButton;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ciudadelas extends AppCompatActivity {
+public class EditarCiudadelas extends AppCompatActivity {
 
     private ImageButton botonCerrarSesion;
     private ImageButton botonInicio;
-    private ImageButton botonSoporte;
+    private ImageButton botonMensajes;
+
     private ImageButton botonPerfil;
+    private ImageButton botonUsuarios;
+    private ImageButton botonAgregar;
     private DatabaseReference databaseReference;
     private String currentUserId; // Almacena el ID de usuario actual
     private RecyclerView recyclerViewCiudadelas;
@@ -38,23 +43,21 @@ public class Ciudadelas extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ciudadelas);
+        setContentView(R.layout.activity_editar_ciudadelas);
 
         botonCerrarSesion = findViewById(R.id.boton_salir);
         botonInicio = findViewById(R.id.boton_inicio);
-        botonSoporte = findViewById(R.id.boton_soporte);
+        botonMensajes = findViewById(R.id.boton_mensajes);
         botonPerfil = findViewById(R.id.boton_perfil);
+        botonUsuarios = findViewById(R.id.boton_usuarios);
+        botonAgregar = findViewById(R.id.boton_agregar);
 
         recyclerViewCiudadelas = findViewById(R.id.recyclerViewCiudadelas);
         recyclerViewCiudadelas.setLayoutManager(new LinearLayoutManager(this));
         ciudadelasAdapter = new CiudadelasAdapter();
         recyclerViewCiudadelas.setAdapter(ciudadelasAdapter);
 
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            currentUserId = currentUser.getUid();
-            databaseReference = FirebaseDatabase.getInstance().getReference().child("GateGuard").child("Usuarios").child(currentUserId).child("Ciudadelas");
-        }
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("GateGuard").child("Usuarios");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -62,13 +65,27 @@ public class Ciudadelas extends AppCompatActivity {
                 Log.d("Ciudadelas", "onDataChange event triggered");
 
                 ciudadelasAdapter.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String nombreCiudadela = snapshot.getKey();
-                    Log.d("Ciudadelas", "Nombre de ciudadela: " + nombreCiudadela);
-                    ciudadelasAdapter.addNombreCiudadela(nombreCiudadela);
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    currentUserId = userSnapshot.getKey();
+                    DatabaseReference userCiudadelasRef = userSnapshot.child("Ciudadelas").getRef();
+
+                    userCiudadelasRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot userCiudadelasSnapshot) {
+                            for (DataSnapshot snapshot : userCiudadelasSnapshot.getChildren()) {
+                                String nombreCiudadela = snapshot.getKey();
+                                Log.d("Ciudadelas", "Nombre de ciudadela: " + nombreCiudadela);
+                                ciudadelasAdapter.addNombreCiudadela(nombreCiudadela);
+                            }
+                            ciudadelasAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.e("Ciudadelas", "Error en Firebase Realtime Database: " + databaseError.getMessage());
+                        }
+                    });
                 }
-                ciudadelasAdapter.notifyDataSetChanged();
-                Log.d("Ciudadelas", "notifyDataSetChanged() llamado");
             }
 
             @Override
@@ -92,10 +109,17 @@ public class Ciudadelas extends AppCompatActivity {
             }
         });
 
-        botonSoporte.setOnClickListener(new View.OnClickListener() {
+        botonMensajes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                soporte();
+                mensajes();
+            }
+        });
+
+        botonUsuarios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                usuarios();
             }
         });
 
@@ -106,28 +130,51 @@ public class Ciudadelas extends AppCompatActivity {
             }
         });
 
+        botonAgregar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                agregar();
+            }
+        });
+
     }
 
     public void cerrarSesion() {
         FirebaseAuth.getInstance().signOut();
         finish();
-        Intent intent = new Intent(Ciudadelas.this, InicioSesion.class);
+        // Redirigir a la actividad InicioSesion
+        Intent intent = new Intent(EditarCiudadelas.this, InicioSesion.class);
         intent.putExtra("msg", "cerrarSesion");
         startActivity(intent);
     }
 
     public void regresarInicio() {
-        Intent intent = new Intent(Ciudadelas.this, Ciudadelas.class);
+        // Redirigir a la actividad Ciudadelas
+        Intent intent = new Intent(EditarCiudadelas.this, EditarCiudadelas.class);
         startActivity(intent);
     }
 
-    public void soporte() {
-        Intent intent = new Intent(Ciudadelas.this, Soporte.class);
+    public void mensajes() {
+        // Redirigir a la actividad Soporte
+        Intent intent = new Intent(EditarCiudadelas.this, Mensajes.class);
         startActivity(intent);
     }
 
     public void perfil() {
-        Intent intent = new Intent(Ciudadelas.this, PerfilUsuario.class);
+        // Redirigir a la actividad Perfil Usuario
+        Intent intent = new Intent(EditarCiudadelas.this, PerfilUsuario.class);
+        startActivity(intent);
+    }
+
+    public void usuarios() {
+        // Redirigir a la actividad Ciudadelas
+        Intent intent = new Intent(EditarCiudadelas.this, ListaUsuarios.class);
+        startActivity(intent);
+    }
+
+    public void agregar() {
+        // Redirigir a la actividad Ciudadelas
+        Intent intent = new Intent(EditarCiudadelas.this, RegistroCiudadela.class);
         startActivity(intent);
     }
 
@@ -146,13 +193,13 @@ public class Ciudadelas extends AppCompatActivity {
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public CiudadelasAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.disenio_opciones, parent, false);
-            return new ViewHolder(view);
+            return new CiudadelasAdapter.ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(CiudadelasAdapter.ViewHolder holder, int position) {
             String nombreCiudadela = nombresCiudadelas.get(position);
             holder.nombreButton.setText(nombreCiudadela);
 
@@ -181,4 +228,5 @@ public class Ciudadelas extends AppCompatActivity {
             }
         }
     }
+
 }

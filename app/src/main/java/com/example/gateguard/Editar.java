@@ -1,3 +1,5 @@
+//VISTAS USUARIO
+
 package com.example.gateguard;
 
 import android.content.Intent;
@@ -63,7 +65,6 @@ public class Editar extends AppCompatActivity {
         botonInicio = findViewById(R.id.boton_inicio);
         botonSoporte = findViewById(R.id.boton_soporte);
         botonPerfil = findViewById(R.id.boton_perfil);
-        botonHistorial = findViewById(R.id.boton_historial);
 
         nombreEditText = findViewById(R.id.txt_nombre);
         correoTextView = findViewById(R.id.txt_correo);
@@ -177,13 +178,6 @@ public class Editar extends AppCompatActivity {
             }
         });
 
-        botonHistorial.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                historial();
-            }
-        });
-
         botonPerfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -290,13 +284,6 @@ public class Editar extends AppCompatActivity {
         Intent intent = new Intent(Editar.this, PerfilUsuario.class);
         startActivity(intent);
     }
-
-    public void historial() {
-        // Redirigir a la actividad Ciudadelas
-        Intent intent = new Intent(Editar.this, Historial.class);
-        startActivity(intent);
-    }
-
 
     private void cambiarPassword() {
         Intent intent = new Intent(Editar.this, CambiarPassword.class);

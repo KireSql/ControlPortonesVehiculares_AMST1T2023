@@ -1,3 +1,5 @@
+//VISTAS USUARIO
+
 package com.example.gateguard;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,16 +17,16 @@ import android.widget.ImageButton;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ciudadelas extends AppCompatActivity {
+public class Puertas extends AppCompatActivity {
 
     private ImageButton botonCerrarSesion;
     private ImageButton botonInicio;
@@ -32,48 +34,50 @@ public class Ciudadelas extends AppCompatActivity {
     private ImageButton botonPerfil;
     private DatabaseReference databaseReference;
     private String currentUserId; // Almacena el ID de usuario actual
-    private RecyclerView recyclerViewCiudadelas;
-    private CiudadelasAdapter ciudadelasAdapter;
+    private RecyclerView recyclerViewPuertas;
+    private PuertasAdapter puertasAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ciudadelas);
+        setContentView(R.layout.activity_puertas);
+
+        String nombreCiudadela = getIntent().getStringExtra("nombreCiudadela");
 
         botonCerrarSesion = findViewById(R.id.boton_salir);
         botonInicio = findViewById(R.id.boton_inicio);
         botonSoporte = findViewById(R.id.boton_soporte);
         botonPerfil = findViewById(R.id.boton_perfil);
 
-        recyclerViewCiudadelas = findViewById(R.id.recyclerViewCiudadelas);
-        recyclerViewCiudadelas.setLayoutManager(new LinearLayoutManager(this));
-        ciudadelasAdapter = new CiudadelasAdapter();
-        recyclerViewCiudadelas.setAdapter(ciudadelasAdapter);
+        recyclerViewPuertas = findViewById(R.id.recyclerViewPuertas);
+        recyclerViewPuertas.setLayoutManager(new LinearLayoutManager(this));
+        puertasAdapter = new PuertasAdapter();
+        recyclerViewPuertas.setAdapter(puertasAdapter);
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             currentUserId = currentUser.getUid();
-            databaseReference = FirebaseDatabase.getInstance().getReference().child("GateGuard").child("Usuarios").child(currentUserId).child("Ciudadelas");
+            databaseReference = FirebaseDatabase.getInstance().getReference().child("GateGuard").child("Usuarios").child(currentUserId).child("Ciudadelas").child(nombreCiudadela);
         }
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("Ciudadelas", "onDataChange event triggered");
+                Log.d("Puertas", "onDataChange event triggered");
 
-                ciudadelasAdapter.clear();
+                puertasAdapter.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String nombreCiudadela = snapshot.getKey();
-                    Log.d("Ciudadelas", "Nombre de ciudadela: " + nombreCiudadela);
-                    ciudadelasAdapter.addNombreCiudadela(nombreCiudadela);
+                    String nombrePuerta = snapshot.getKey();
+                    Log.d("Puertas", "Nombre de puerta: " + nombrePuerta);
+                    puertasAdapter.addPuertas(nombrePuerta);
                 }
-                ciudadelasAdapter.notifyDataSetChanged();
-                Log.d("Ciudadelas", "notifyDataSetChanged() llamado");
+                puertasAdapter.notifyDataSetChanged();
+                Log.d("Puertas", "notifyDataSetChanged() llamado");
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("Ciudadelas", "Error en Firebase Realtime Database: " + databaseError.getMessage());
+                Log.e("Puertas", "Error en Firebase Realtime Database: " + databaseError.getMessage());
             }
         });
 
@@ -111,57 +115,58 @@ public class Ciudadelas extends AppCompatActivity {
     public void cerrarSesion() {
         FirebaseAuth.getInstance().signOut();
         finish();
-        Intent intent = new Intent(Ciudadelas.this, InicioSesion.class);
+        Intent intent = new Intent(this, InicioSesion.class);
         intent.putExtra("msg", "cerrarSesion");
         startActivity(intent);
     }
 
     public void regresarInicio() {
-        Intent intent = new Intent(Ciudadelas.this, Ciudadelas.class);
+        Intent intent = new Intent(this, Ciudadelas.class);
         startActivity(intent);
     }
 
     public void soporte() {
-        Intent intent = new Intent(Ciudadelas.this, Soporte.class);
+        Intent intent = new Intent(this, Soporte.class);
         startActivity(intent);
     }
 
     public void perfil() {
-        Intent intent = new Intent(Ciudadelas.this, PerfilUsuario.class);
+        Intent intent = new Intent(this, PerfilUsuario.class);
         startActivity(intent);
     }
 
-    class CiudadelasAdapter extends RecyclerView.Adapter<CiudadelasAdapter.ViewHolder> {
+    class PuertasAdapter extends RecyclerView.Adapter<PuertasAdapter.ViewHolder> {
 
-        private List<String> nombresCiudadelas = new ArrayList<>();
+        private List<String> nombresPuertas = new ArrayList<>();
 
-        public void addNombreCiudadela(String nombre) {
-            nombresCiudadelas.add(nombre);
+        public void addPuertas(String nombre) {
+            nombresPuertas.add(nombre);
             notifyDataSetChanged();
         }
 
         public void clear() {
-            nombresCiudadelas.clear();
+            nombresPuertas.clear();
             notifyDataSetChanged();
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public PuertasAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.disenio_opciones, parent, false);
-            return new ViewHolder(view);
+            return new PuertasAdapter.ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            String nombreCiudadela = nombresCiudadelas.get(position);
-            holder.nombreButton.setText(nombreCiudadela);
+        public void onBindViewHolder(PuertasAdapter.ViewHolder holder, int position) {
+            String nombrePuerta = nombresPuertas.get(position);
+            holder.nombreButton.setText(nombrePuerta);
 
             holder.nombreButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Acción al hacer clic en el texto del elemento
-                    Intent intent = new Intent(v.getContext(), Puertas.class);
-                    intent.putExtra("nombreCiudadela", nombreCiudadela); // Envía el nombre de la ciudadela
+                    Intent intent = new Intent(v.getContext(), Control.class);
+                    intent.putExtra("nombreCiudadela", getIntent().getStringExtra("nombreCiudadela")); // Envía el nombre de la ciudadela
+                    intent.putExtra("nombrePuerta", nombrePuerta); // Envía el nombre de la puerta
                     v.getContext().startActivity(intent);
                 }
             });
@@ -169,7 +174,7 @@ public class Ciudadelas extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return nombresCiudadelas.size();
+            return nombresPuertas.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {

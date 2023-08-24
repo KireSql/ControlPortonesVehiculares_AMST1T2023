@@ -1,3 +1,5 @@
+//VISTAS USUARIO
+
 package com.example.gateguard;
 
 import android.content.Intent;
@@ -32,13 +34,9 @@ public class PerfilUsuario extends AppCompatActivity {
     private ImageButton botonCerrarSesion;
     private ImageButton botonInicio;
     private ImageButton botonSoporte;
-
     private ImageButton botonPerfil;
-    private ImageButton botonHistorial;
-
     private String userId, providerId;
     private TextView botonEditar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +47,6 @@ public class PerfilUsuario extends AppCompatActivity {
         botonInicio = findViewById(R.id.boton_inicio);
         botonSoporte = findViewById(R.id.boton_soporte);
         botonPerfil = findViewById(R.id.boton_perfil);
-        botonHistorial = findViewById(R.id.boton_historial);
         botonEditar = findViewById(R.id.boton_editar);
 
         fotoImageView = findViewById(R.id.imv_foto);
@@ -176,13 +173,6 @@ public class PerfilUsuario extends AppCompatActivity {
             }
         });
 
-        botonHistorial.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                historial();
-            }
-        });
-
         botonPerfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -221,12 +211,6 @@ public class PerfilUsuario extends AppCompatActivity {
     public void perfil() {
         // Redirigir a la actividad Perfil Usuario
         Intent intent = new Intent(PerfilUsuario.this, PerfilUsuario.class);
-        startActivity(intent);
-    }
-
-    public void historial() {
-        // Redirigir a la actividad Ciudadelas
-        Intent intent = new Intent(PerfilUsuario.this, Historial.class);
         startActivity(intent);
     }
 

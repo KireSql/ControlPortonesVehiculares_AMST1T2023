@@ -1,3 +1,5 @@
+//VISTAS USUARIO
+
 package com.example.gateguard;
 
 import android.os.Bundle;

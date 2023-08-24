@@ -45,7 +45,7 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 // El video ha terminado de reproducirse, inicia la siguiente actividad
-                startActivity(new Intent(SplashScreen.this, MainActivity.class));
+                startActivity(new Intent(SplashScreen.this, InicioSesion.class));
                 finish();
             }
         });

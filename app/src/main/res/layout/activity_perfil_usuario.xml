@@ -255,21 +255,6 @@
             app:layout_constraintVertical_bias="0.6" />
 
         <ImageButton
-            android:id="@+id/boton_historial"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/historial"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"
-            android:layout_margin="15dp"
-            android:onClick="historial"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.6" />
-
-        <ImageButton
             android:id="@+id/boton_perfil"
             android:layout_width="40dp"
             android:layout_height="40dp"

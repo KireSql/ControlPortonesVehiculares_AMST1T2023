@@ -39,6 +39,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
+            android:foreground="@android:drawable/ic_menu_edit"
+            android:foregroundGravity="top|center|right"
+            android:longClickable="false"
             android:onClick="nueva_foto"
             tools:srcCompat="@tools:sample/avatars" />
 
@@ -172,7 +175,7 @@
                 android:id="@+id/txt_nombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center|right"
+                android:gravity="right"
                 android:singleLine="true"
                 android:text="Nombre de usuario"
                 android:textColor="#000000"
@@ -281,21 +284,6 @@
             android:adjustViewBounds="true"
             android:layout_margin="15dp"
             android:onClick="inicio"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.6" />
-
-        <ImageButton
-            android:id="@+id/boton_historial"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/historial"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"
-            android:layout_margin="15dp"
-            android:onClick="historial"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -1,3 +1,5 @@
+//VISTAS USUARIO
+
 package com.example.gateguard;
 
 import android.content.Intent;
@@ -33,7 +35,6 @@ public class Soporte extends AppCompatActivity {
     private ImageButton botonInicio;
     private ImageButton botonSoporte;
     private ImageButton botonPerfil;
-    private ImageButton botonHistorial;
     private Button cancelarButton;
     private Button enviarButton;
     DatabaseReference db_reference;
@@ -50,7 +51,6 @@ public class Soporte extends AppCompatActivity {
         enviarButton = findViewById(R.id.boton_enviar);
         cancelarButton = findViewById(R.id.boton_cancelar);
         botonPerfil = findViewById(R.id.boton_perfil);
-        botonHistorial = findViewById(R.id.boton_historial);
 
         // Obtener el usuario actual de Firebase
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -73,13 +73,6 @@ public class Soporte extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 soporte();
-            }
-        });
-
-        botonHistorial.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                historial();
             }
         });
 
@@ -197,12 +190,6 @@ public class Soporte extends AppCompatActivity {
     public void perfil() {
         // Redirigir a la actividad Perfil Usuario
         Intent intent = new Intent(Soporte.this, PerfilUsuario.class);
-        startActivity(intent);
-    }
-
-    public void historial() {
-        // Redirigir a la actividad Ciudadelas
-        Intent intent = new Intent(Soporte.this, Historial.class);
         startActivity(intent);
     }
 }

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EFEEEE"
-    tools:context=".Historial">
+    tools:context=".EditarCiudadelas">
 
     <TextView
-        android:id="@+id/historial"
+        android:id="@+id/ciudadelas"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_marginLeft="100dp"
@@ -16,7 +17,7 @@
         android:background="@drawable/edittext_rounded_background_2"
         android:fontFamily="sans-serif-light"
         android:gravity="right|center"
-        android:text="Historial   "
+        android:text="Ciudadelas   "
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         android:textSize="34sp"
@@ -26,12 +27,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewCiudadelas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ciudadelas" />
+
+    <ImageButton
+        android:id="@+id/boton_agregar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="15dp"
+        android:layout_marginBottom="16dp"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/agregar"
+        app:layout_constraintBottom_toTopOf="@id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.954"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        tools:context=".Historial"
         android:background="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -44,22 +71,20 @@
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:layout_margin="15dp"
-            android:onClick="inicio"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0.6" />
 
         <ImageButton
-            android:id="@+id/boton_historial"
+            android:id="@+id/boton_usuarios"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/historial"
+            android:src="@drawable/usuarios"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:layout_margin="15dp"
-            android:onClick="historial"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -74,22 +99,20 @@
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:layout_margin="15dp"
-            android:onClick="perfil"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0.6" />
 
         <ImageButton
-            android:id="@+id/boton_soporte"
+            android:id="@+id/boton_mensajes"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/soporte"
+            android:src="@drawable/mensajes"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:layout_margin="15dp"
-            android:onClick="soporte"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -104,7 +127,6 @@
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:layout_margin="15dp"
-            android:onClick="salir"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
