@@ -54,9 +54,6 @@
             android:name=".Editar"
             android:exported="false" />
         <activity
-            android:name=".Historial"
-            android:exported="false" />
-        <activity
             android:name=".PerfilUsuario"
             android:exported="false" />
         <activity

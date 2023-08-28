@@ -1,20 +1,21 @@
 {
   "project_info": {
-    "project_number": "538505313431",
-    "project_id": "gateguard-3f4c0",
-    "storage_bucket": "gateguard-3f4c0.appspot.com"
+    "project_number": "816547044550",
+    "firebase_url": "https://gateguard-e24d3-default-rtdb.firebaseio.com",
+    "project_id": "gateguard-e24d3",
+    "storage_bucket": "gateguard-e24d3.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:538505313431:android:567d3237bbc1bbb9f67dd2",
+        "mobilesdk_app_id": "1:816547044550:android:d1dd085e6f4b2d9ff88bc7",
         "android_client_info": {
           "package_name": "com.example.gateguard"
         }
       },
       "oauth_client": [
         {
-          "client_id": "538505313431-cgj0ns08163cnrfuc67dua4f5qu30u1a.apps.googleusercontent.com",
+          "client_id": "816547044550-uvblrlc5n5id394qva9cn41rvb2shadt.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.gateguard",
@@ -22,20 +23,20 @@
           }
         },
         {
-          "client_id": "538505313431-hbg18nsoon53mjmlm6jicgnvj0h4378a.apps.googleusercontent.com",
+          "client_id": "816547044550-bhf83uft02d9vvok0g524jooiuhm1r9s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDsdRhng8mYstmJLC_GiYLi82COkoBA8aI"
+          "current_key": "AIzaSyAzIB_7jqdBnsygZ1oqD33YvLm1wI0EB-w"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "538505313431-dcgsfg7tbd88gatq64lpek5hbcs56t5p.apps.googleusercontent.com",
+              "client_id": "816547044550-bhf83uft02d9vvok0g524jooiuhm1r9s.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -24,6 +25,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+
 public class Control extends AppCompatActivity {
 
     private ImageButton botonCerrarSesion;
@@ -31,7 +37,14 @@ public class Control extends AppCompatActivity {
     private ImageButton botonSoporte;
     private ImageButton botonPerfil;
     private ImageButton botonEstado;
+    private ImageButton botonAbrir;
+    private ImageButton botonCerrar;
     private DatabaseReference mDatabase;
+    private DatabaseReference estadoRef;
+    private static final String BROKER_URL = "tcp://193.122.149.232:1883"; // Cambiar por la dirección de broker MQTT
+    private static final String CLIENT_ID = "AndroidClient";
+    private MqttClient mqttClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +56,21 @@ public class Control extends AppCompatActivity {
         botonSoporte = findViewById(R.id.boton_soporte);
         botonPerfil = findViewById(R.id.boton_perfil);
         botonEstado = findViewById(R.id.boton_estado);
+        botonAbrir = findViewById(R.id.boton_abrir);
+        botonCerrar = findViewById(R.id.boton_cerrar);
+
+        connectToMqttBroker();
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        estadoRef = mDatabase.child("Gateguard").child("Usuarios");
+
+        // Mostrar mensaje de conexión establecida
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(Control.this, "Conexión establecida", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         botonEstado.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +107,19 @@ public class Control extends AppCompatActivity {
             }
         });
 
+        botonAbrir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrir();
+            }
+        });
+
+        botonCerrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cerrar();
+            }
+        });
     }
 
     private void mostrarEstadoDialog() {
@@ -89,27 +128,30 @@ public class Control extends AppCompatActivity {
             String currentCiudadela = getIntent().getStringExtra("nombreCiudadela");
             String currentPuerta = getIntent().getStringExtra("nombrePuerta");
 
-            // Obtener una referencia a la ubicación de datos en Firebase
-            DatabaseReference estadoRef = mDatabase.child("Gateguard").child("Usuarios")
-                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                    .child("Ciudadelas")
-                    .child(currentCiudadela)
-                    .child(currentPuerta)
-                    .child("estado");
-
-            estadoRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            estadoRef.addValueEventListener(new ValueEventListener(){
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    String estado = dataSnapshot.getValue(String.class); //Revisar esta linea, devuelve un null
+
+                    // Verificar si el nodo "estado" existe antes de obtener su valor
+                    String estado = dataSnapshot.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .child("Ciudadelas")
+                            .child(currentCiudadela)
+                            .child(currentPuerta)
+                            .child("estado").getValue(String.class);
 
                     Log.d("DEBUG", "Valor de estado: " + estado);
 
-                    mostrarDialogoEmergente(estado);
+                    if (estado != null) {
+                        mostrarDialogoEmergente(estado);
+                    } else {
+                        Log.e("DEBUG", "El valor de estado es nulo.");
+                    }
 
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
+                    Log.e("DEBUG", "Error al leer los datos: " + databaseError.getMessage());
                     mostrarErrorConexion();
                 }
             });
@@ -186,5 +228,84 @@ public class Control extends AppCompatActivity {
         // Redirigir a la actividad Perfil Usuario
         Intent intent = new Intent(this, PerfilUsuario.class);
         startActivity(intent);
+    }
+
+    private void connectToMqttBroker() {
+        try {
+            mqttClient = new MqttClient(BROKER_URL, CLIENT_ID, new MemoryPersistence());
+            MqttConnectOptions options = new MqttConnectOptions();
+            options.setCleanSession(true);
+
+            mqttClient.connect(options);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void abrir() {
+        try {
+            String topic = "puerta/control"; // Cambia el topic según tu configuración
+            String mensaje = "abrir_puerta";
+
+            MqttMessage mqttMessage = new MqttMessage(mensaje.getBytes());
+            mqttClient.publish(topic, mqttMessage);
+
+            mostrarMensajePuertaAbierta();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void cerrar() {
+        try {
+            String topic = "puerta/control"; // Cambia el topic según tu configuración
+            String mensaje = "cerrar_puerta";
+
+            MqttMessage mqttMessage = new MqttMessage(mensaje.getBytes());
+            mqttClient.publish(topic, mqttMessage);
+
+            mostrarMensajePuertaCerrada();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void mostrarMensajePuertaAbierta() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Puerta Abierta")
+                .setMessage("La puerta ha sido abierta.")
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    private void mostrarMensajePuertaCerrada() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Puerta Cerrada")
+                .setMessage("La puerta ha sido cerrada.")
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mqttClient != null && mqttClient.isConnected()) {
+            try {
+                mqttClient.disconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
